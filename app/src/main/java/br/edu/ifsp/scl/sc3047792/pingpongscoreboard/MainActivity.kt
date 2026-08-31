@@ -22,10 +22,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import br.edu.ifsp.scl.sc3047792.pingpongscoreboard.ui.theme.PingPongScoreBoardTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PingPongScoreBoardTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    PingPongScreenRemember()
+                    PingPongScreenViewModelState()
                 }
             }
         }
@@ -42,19 +42,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PingPongScreenRemember() {
-    var scoreA by remember { mutableStateOf(0) }
-    var scoreB by remember { mutableStateOf(0) }
-
+fun PingPongScreenViewModelState(viewModel: PingPongViewModel = viewModel()) {
     PingPongLayout(
-        scoreA = scoreA,
-        scoreB = scoreB,
-        onIncrementA = { scoreA++ },
-        onIncrementB = { scoreB++ },
-        onReset = {
-            scoreA = 0
-            scoreB = 0
-        }
+        scoreA = viewModel.scoreA,
+        scoreB = viewModel.scoreB,
+        onIncrementA = viewModel::incrementA,
+        onIncrementB = viewModel::incrementB,
+        onReset = viewModel::reset
     )
 }
 
@@ -118,7 +112,7 @@ private fun TeamColumn(
 
 @Preview(showBackground = true)
 @Composable
-fun PingPongScreenRememberPreview() {
+fun PingPongScreenViewModelStatePreview() {
     var scoreA by remember { mutableStateOf(0) }
     var scoreB by remember { mutableStateOf(0) }
 
