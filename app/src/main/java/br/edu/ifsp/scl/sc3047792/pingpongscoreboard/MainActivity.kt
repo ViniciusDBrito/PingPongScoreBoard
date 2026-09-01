@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PingPongScoreBoardTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    PingPongScreenStateFlow()
+                    PingPongScreenSavedStateHandle()
                 }
             }
         }
@@ -43,12 +44,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PingPongScreenStateFlow(viewModel: PingPongViewModel = viewModel()) {
-    val uiState by viewModel.uiState.collectAsState()
+fun PingPongScreenSavedStateHandle(viewModel: PingPongViewModel = viewModel()) {
+    val scoreA by viewModel.scoreA.collectAsState()
+    val scoreB by viewModel.scoreB.collectAsState()
 
     PingPongLayout(
-        scoreA = uiState.scoreA,
-        scoreB = uiState.scoreB,
+        scoreA = scoreA,
+        scoreB = scoreB,
         onIncrementA = viewModel::incrementA,
         onIncrementB = viewModel::incrementB,
         onReset = viewModel::reset
@@ -103,9 +105,9 @@ private fun TeamColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = teamName, fontSize = 24.sp)
+        Text(text = teamName, fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "$score", fontSize = 48.sp)
+        Text(text = "$score", fontSize = 48.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onIncrement) {
             Text("+1")
@@ -115,7 +117,7 @@ private fun TeamColumn(
 
 @Preview(showBackground = true)
 @Composable
-fun PingPongScreenStateFlowPreview() {
+fun PingPongScreenSavedStateHandlePreview() {
     var scoreA by remember { mutableStateOf(0) }
     var scoreB by remember { mutableStateOf(0) }
 
