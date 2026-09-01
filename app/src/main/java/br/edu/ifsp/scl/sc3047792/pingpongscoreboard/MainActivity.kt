@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PingPongScoreBoardTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    PingPongScreenViewModelState()
+                    PingPongScreenStateFlow()
                 }
             }
         }
@@ -42,10 +43,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun PingPongScreenViewModelState(viewModel: PingPongViewModel = viewModel()) {
+fun PingPongScreenStateFlow(viewModel: PingPongViewModel = viewModel()) {
+    val uiState by viewModel.uiState.collectAsState()
+
     PingPongLayout(
-        scoreA = viewModel.scoreA,
-        scoreB = viewModel.scoreB,
+        scoreA = uiState.scoreA,
+        scoreB = uiState.scoreB,
         onIncrementA = viewModel::incrementA,
         onIncrementB = viewModel::incrementB,
         onReset = viewModel::reset
@@ -112,7 +115,7 @@ private fun TeamColumn(
 
 @Preview(showBackground = true)
 @Composable
-fun PingPongScreenViewModelStatePreview() {
+fun PingPongScreenStateFlowPreview() {
     var scoreA by remember { mutableStateOf(0) }
     var scoreB by remember { mutableStateOf(0) }
 
